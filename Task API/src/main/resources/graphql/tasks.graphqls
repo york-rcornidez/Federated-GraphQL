@@ -1,0 +1,19 @@
+# Task Type Definition
+type Task {
+    id: ID!
+    title: String!
+    description: String!
+}
+
+# Queries for fetching data
+type Query {
+    getAllTasks: [Task!]!
+    getTaskById(id: ID!): Task
+}
+
+# Mutations for creating, updating, and deleting data
+type Mutation {
+    createTask(title: String!, description: String!): Task!
+    updateTask(id: ID!, title: String!, description: String!): Task!
+    deleteTask(id: ID!): String!
+}
