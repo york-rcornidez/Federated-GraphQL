@@ -1,0 +1,77 @@
+services:
+
+  # APIs
+  gateway:
+    build:
+      context: "Gateway API"
+      dockerfile: Dockerfile
+    ports:
+      - "${GATEWAY_PORT}:8080"
+    depends_on:
+      - user
+      - task
+    networks:
+      - user_net
+      - task_net
+
+  user:
+    build:
+      context: "User API"
+      dockerfile: Dockerfile
+    ports:
+      - "${USER_PORT}:8080"
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+    depends_on:
+      - postgres-user
+    networks:
+      - user_net
+
+  task:
+    build:
+      context: "Task API"
+      dockerfile: Dockerfile
+    ports:
+      - "${TASK_PORT}:8080"
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+    depends_on:
+      - postgres-task
+    networks:
+      - task_net
+#
+#  # Databases
+  postgres-task:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PORT=${CONTAINER_PORT}
+      - POSTGRES_HOST=${POSTGRES_TASK_HOST}
+    ports:
+      - "${POSTGRES_TASK_HOST_PORT}:5432"
+    networks:
+      - task_net
+
+  postgres-user:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PORT=${CONTAINER_PORT}
+      - POSTGRES_HOST=${POSTGRES_USER_HOST}
+    ports:
+      - "${POSTGRES_USER_HOST_PORT}:5432"
+    networks:
+      - user_net
+
+networks:
+  user_net:
+  task_net:
+
