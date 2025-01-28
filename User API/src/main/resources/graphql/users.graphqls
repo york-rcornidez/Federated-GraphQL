@@ -1,0 +1,19 @@
+# User Type Definition
+type User {
+    id: ID!
+    email: String!
+    password: String!
+}
+
+# Queries for fetching data
+type Query {
+    getAllUsers: [User!]!
+    getUserById(id: ID!): User
+}
+
+# Mutations for creating, updating, and deleting data
+type Mutation {
+    createUser(email: String!, password: String!): User!
+    updateUser(id: ID!, email: String!, password: String!): User!
+    deleteUser(id: ID!): String!
+}
